@@ -4,12 +4,13 @@ import time
 
 
 def take_1000_posts():
-    owner_id = '-id group'
+    owner_id = '-YOU GROUP'
     version = 5.103
-    token = 'ENTER OURS TOKEN'
+    token = 'YOUR TOKEN'
     offset = 0
     count = 100
     all_posts = []
+
     while offset < 1000:
         response = requests.get('https://api.vk.com/method/wall.get',
                                 params={
@@ -30,8 +31,12 @@ def take_1000_posts():
 def file_writer(data):
     with open('my_python_group_vk.csv', 'w') as file:
         a_pen = csv.writer(file)
-        a_pen.writerow(('likes', 'body', 'url'))
+        cnt = 0
+
+        a_pen.writerow(('date', 'body', 'url', '\n'))
         for post in data:
+            cnt += 1
+            a_pen.writerow((f'\n' + 'Post number: ', cnt))
             img_url = ''
             try:
                 if post['attachments'][0]['type']:
@@ -42,8 +47,8 @@ def file_writer(data):
 
             except:
                 pass
-
-            a_pen.writerow((post['likes']['count'], post['text'], img_url))
+            time_mos = time.ctime(post['date'])
+            a_pen.writerow((time_mos, '\n', post['text'], img_url))
 
 
 all_posts = take_1000_posts()
